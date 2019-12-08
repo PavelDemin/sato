@@ -1,35 +1,33 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-
-import config
+import sys
+from PySide2 import QtWidgets, QtCore
+from PySide2.QtWidgets import QMessageBox
+from designe import Ui_MainWindow
+import time
+import random
 
 
+class Sato(QtWidgets.QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.show()
+        self.pushButton.clicked.connect(self.load_to_sato)
+        QtCore.QObject.connect(self.comboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.sato_mode)
 
-#chrome_bin = os.environ.get('GOOGLE_CHROME_SHIM', None)
-chrome_options = Options()
-#chrome_options.binary_location = chrome_bin
-
-chrome_options = Options()
-#chrome_options.add_argument("--headless")
-#chrome_options.add_argument("--disable-extensions")
-#chrome_options.add_argument("--disable-gpu")
-#chrome_options.add_argument("--no-sandbox")
-CHROMEDRIVER_PATH = 'C:\\chromedriver.exe'
-driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, options=chrome_options)
+    def load_to_sato(self):
+        print('load config')
+        for i in range(0, 101):
+          #  time.sleep(0.1)
+            self.progressBar.setValue(i)
+        msg = QMessageBox.information(None, 'Info', 'text')
+        msg.show()
 
 
-if __name__ == "__main__":
-    driver.get(config.url)
-    
-    try:
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "PrnConfWriteSelectDisp"))
-        )
-        # driver.find_element_by_id("PrnConfWriteSelectDisp").send_keys("file-path")
-        # driver.find_element_by_id("submit").click()
-    finally:
-        driver.quit()
+    def sato_mode(self):
+        print(self.comboBox.currentIndex())
+
+
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    sato_app = Sato()
+    sys.exit(app.exec_())
