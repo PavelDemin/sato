@@ -19,7 +19,7 @@ class Sato(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pushButton.setText('Непрерывный режим печати')
             self.label_3.setText('Печать по датчику')
         else:
-            self.label_3.setText('НЕКОРЕКТНЫЕ ПАРАМЕТРЫ!')
+            self.label_3.setText('НЕКОРРЕКТНЫЕ ПАРАМЕТРЫ!')
 
     def load_to_sato(self):
         """
@@ -29,8 +29,9 @@ class Sato(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         if self.type_printer == 1: # 1 - fast mode (Continuous)
             core.download_config_to_printer(0)
+            core.restart_printer()
         elif self.type_printer == 0: # 0 - dispenser mode
-            core.load_config_from_printer(type_printer)
+            core.load_config_from_printer(self.type_printer)
             core.download_config_to_printer(1)
             core.restart_printer()
 
