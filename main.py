@@ -2,8 +2,7 @@ import sys
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtWidgets import QMessageBox
 from designe import Ui_MainWindow
-import time
-import random
+import core
 
 
 class Sato(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -12,19 +11,28 @@ class Sato(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.show()
         self.pushButton.clicked.connect(self.load_to_sato)
-        QtCore.QObject.connect(self.comboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.sato_mode)
+        self.type_printer = core.get_type_printer()
+        if self.type_printer == 1:
+            self.pushButton.setText('Печать от датчика')
+            self.label_3.setText('Непрерывный режим печати')
+        elif self.type_printer == 0:
+            self.pushButton.setText('Непрерывный режим печати')
+            self.label_3.setText('Печать по датчику')
+        else:
+            self.label_3.setText('НЕКОРЕКТНЫЕ ПАРАМЕТРЫ!')
 
     def load_to_sato(self):
-        print('load config')
-        for i in range(0, 101):
-          #  time.sleep(0.1)
-            self.progressBar.setValue(i)
-        msg = QMessageBox.information(None, 'Info', 'text')
-        msg.show()
+        """
+        1 - fast mode (Continuous) 
+        0 - dispenser mode
 
-
-    def sato_mode(self):
-        print(self.comboBox.currentIndex())
+        """
+        if self.type_printer == 1: # 1 - fast mode (Continuous)
+            core.download_config_to_printer(0)
+        elif self.type_printer == 0: # 0 - dispenser mode
+            core.load_config_from_printer(type_printer)
+            core.download_config_to_printer(1)
+            core.restart_printer()
 
 
 if __name__ == '__main__':
