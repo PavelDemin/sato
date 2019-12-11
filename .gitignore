@@ -3,3 +3,6 @@
 build
 dist
 env
+log.log
+main.spec
+test.py
